@@ -1,0 +1,27 @@
+#!/usr/bin/env node
+// vimrun! node -i -r ./csvchart-node test/testfile-01.csv
+
+const fs = require("fs");
+const Papa = require("./papaparse.js");
+
+// const argv = process.argv.slice(2);
+
+// var d = fs.readFileSync("test/testfile-01.csv", "utf8");
+
+fs.readFile("test/testfile-01.csv", "utf8", (err, data) => {
+	if(err) {
+		console.error(err);
+
+		return;
+	}
+
+	global.csv = Papa.parse(data, {
+		dynamicTyping: true,
+		skipEmptyLines: true,
+		header: true
+	}).data.map(e => [
+		e["Keyword"],
+		e["Keyword Difficulty"],
+		e["Search Volume"]
+	]);
+});

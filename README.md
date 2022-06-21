@@ -14,6 +14,9 @@ Feed CSV files into various chart/plot displays.
   interest in each row: Difficulty (percent), search volume (int), and
   keyword (string).
 
+- The numeric columns we care about are always "Search Volume" (X axis) and
+  "Keyword Difficulty" (Y axis). The labels for each point are "Keyword"
+
 - We make a carrier 2d dot plot similar to [this](https://images.app.goo.gl/bVYjQdWPGGGPPwZi8)
 
 - X axis is the search volume, with logarithmic scaling, ranged between the min
