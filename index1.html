@@ -24,8 +24,34 @@
 		google.charts.load("current", {"packages": ["corechart"]});
 		// google.charts.setOnLoadCallback(drawChart);
 
-		// https://developers.google.com/chart/interactive/docs/gallery/scatterchart
 		function drawChart(d) {
+			var dataTable = new google.visualization.DataTable();
+
+			dataTable.addColumn("number", "Search Volume");
+			dataTable.addColumn("number", "Keyword Difficulty");
+			dataTable.addColumn({type: "string", role: "tooltip"});
+
+			dataTable.addRows(d);
+
+			var options = {
+				title: "AlphaPixel CSVChart",
+				// hAxis: {title: "Search Volume", minValue: 0, maxValue: 15, logScale: true},
+				hAxis: {logScale: true},
+				//vAxis: {title: "Keyword Difficulty", minValue: 0, maxValue: 15, logScale: false},
+				legend: "none"
+			};
+
+			var chart_div = document.getElementById('chart_div');
+			var chart = new google.visualization.ScatterChart(chart_div);
+
+			// var options = { legend: "none" };
+			// var chart = new google.visualization.ColumnChart(document.getElementById("chart_div"));
+
+			chart.draw(dataTable, options);
+		}
+
+		// https://developers.google.com/chart/interactive/docs/gallery/scatterchart
+		function drawChartOLD(d) {
 			var data = google.visualization.arrayToDataTable(d);
 
 			/* var data = google.visualization.arrayToDataTable([
@@ -134,15 +160,29 @@
 
 			// https://www.papaparse.com/docs#config
 			fr.onload = function() {
-				csv = Papa.parse(fr.result, {
+				/* csv = Papa.parse(fr.result, {
 					dynamicTyping: true,
 					skipEmptyLines: true
-				});
+				}); */
+
+				csv = Papa.parse(fr.result, {
+					dynamicTyping: true,
+					skipEmptyLines: true,
+					header: true
+				}).data.map(e => [
+					e["Search Volume"],
+					e["Keyword Difficulty"],
+					e["Keyword"]
+				]);
+
+				// csv = [["FOO", "BAR", "BAZ"], ...csv];
 
 				// document.getElementById("output").textContent = fr.result;
 				// document.getElementById("output").textContent = csv;
+				console.log(csv, JSON.stringify(csv))
 
-				drawChart(csv.data);
+				// drawChart(csv.data);
+				drawChart(csv);
 			}
 
 			fr.readAsText(this.files[0]);
