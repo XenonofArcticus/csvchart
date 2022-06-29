@@ -53,5 +53,13 @@ Feed CSV files into various chart/plot displays.
 
   - [Google Charts](https://developers.google.com/chart)
 
-  - [...](#)
+  - [Chart.js](https://www.chartjs.org)
+  - [Chart.js/datalabels](https://github.com/chartjs/chartjs-plugin-datalabels)
 
+# TODO
+
+- [ ] CSV Data/Point Merging
+
+- [x] Interactive Static Sizing
+
+- [ ] Excel-style Data Filtering
