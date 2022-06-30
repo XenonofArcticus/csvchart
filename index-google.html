@@ -30,7 +30,7 @@
 
 			dataTable.addColumn("number", "Search Volume");
 			dataTable.addColumn("number", "Keyword Difficulty");
-			// dataTable.addColumn({type: "string", role: "tooltip"});
+			dataTable.addColumn({type: "string", role: "tooltip"});
 			// https://stackoverflow.com/questions/37937417/how-to-draw-scatter-chart-with-labels-on-google-chart
 			dataTable.addColumn({type: "string", role: "annotation"});
 
@@ -38,6 +38,7 @@
 
 			// https://stackoverflow.com/questions/21325577/how-to-increase-annotation-font-size-and-bold-the-annotation-value-in-line-chart
 			// https://developers.google.com/chart/interactive/docs/basic_customizing_chart
+			// https://developers.google.com/chart/interactive/docs/gallery/imagepiechart#Configuration_Options
 			var options = {
 				title: "AlphaPixel Reach Keyword Chart",
 				// hAxis: {title: "Search Volume", minValue: 0, maxValue: 15, logScale: true},
@@ -46,6 +47,10 @@
 				legend: "none",
 				width: 3000,
 				height: 2000,
+				chartArea: {
+					width: "90%",
+					height: "90%"
+				},
 				annotations: {
 					textStyle: {
 						// fontName: "Times-Roman",
@@ -144,7 +149,7 @@
 	<!-- <div class="divider bg-light"><hr></div> -->
 	<hr class="divider: 1px dashed light"/>
 
-	<!-- <div id="chart_div" style="width: 900px; height: 500px;"></div> -->
+	<!-- <div id="chart_div" style="width: 1920px; height: 1080px;"></div> -->
 	<!-- <div id="chart_div" style="width: 100%; height: 100%;"></div> -->
 	<div id="chart_div"/>
 
@@ -166,6 +171,7 @@
 				}).data.map(e => [
 					e["Search Volume"],
 					e["Keyword Difficulty"],
+					"Diff " + e["Search Volume"] + " Vol " + e["Keyword Difficulty"],
 					e["Keyword"]
 				]);
 
