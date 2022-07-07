@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+	html,
+	body {
+		width: 100%;
+		height: 100%;
+		margin: 0;
+	}
+
+	canvas {
+		background-color: #666;
+		/* display: block; */
+		position: relative;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		width: 512px;
+		height: 512px;
+	}
+</style>
+<script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
+</head>
+<body>
+
+<div id="_canvasDiv" style="max-height: 256px; max-width:256px; overflow: auto;">
+	<canvas id="_canvas" width="512px" height="512px">Your browser does not support the HTML canvas tag.</canvas>
+</div>
+
+<script>
+	/* class Canvas {
+		constructor(canvas) {
+			this.c = canvas.getContext("2d");
+		}
+
+		resize() {
+			console.log("++ resize");
+
+			this.w = this.c.clientWidth;
+			this.h = this.c.clientHeight;
+
+			this.draw();
+
+			console.log("-- resize");
+		};
+
+		draw() {
+			console.log("++ draw");
+			console.log("cw = " + canvas.width + ", ch = " + canvas.height);
+			console.log("ccw = " + canvas.clientWidth + ", cch = " + canvas.clientHeight);
+			console.log("w = " + w + ", h = " + h);
+
+			c.save();
+			c.beginPath();
+			c.strokeStyle = "#ffffff";
+			c.lineWidth = 2;
+			c.arc(w / 2, h / 2, w / 4, 0, 2 * Math.PI);
+			c.stroke();
+			c.restore();
+
+			c.beginPath();
+			// c.strokeStyle = "#ffffff";
+			// c.lineWidth = 2;
+			c.arc(w / 2, h / 2, w / 6, 0, 2 * Math.PI);
+			c.stroke();
+
+			console.log("-- draw");
+		}
+	} */
+
+	// https://www.w3schools.com/graphics/canvas_reference.asp
+	var canvas = document.getElementById("_canvas");
+	var c = canvas.getContext("2d");
+
+	// canvas.width = canvas.height * (canvas.clientWidth / canvas.clientHeight);
+	// canvas.width = canvas.clientWidth
+	// canvas.height = canvas.clientHeight
+
+	var w = 0; // canvas.width;
+	var h = 0; // canvas.height;
+
+	function canvasResize() {
+		// console.log("++ resize");
+
+		w = canvas.clientWidth;
+		h = canvas.clientHeight;
+
+		canvas.width = w;
+		canvas.height = h;
+
+		canvasDraw();
+
+		// console.log("-- resize");
+	};
+
+	function canvasDraw() {
+		// console.log("++ draw");
+		// console.log("cw = " + canvas.width + ", ch = " + canvas.height);
+		// console.log("ccw = " + canvas.clientWidth + ", cch = " + canvas.clientHeight);
+		// console.log("w = " + w + ", h = " + h);
+
+		c.save();
+		c.beginPath();
+		c.strokeStyle = "#ffffff";
+		c.lineWidth = 2;
+		c.arc(w / 2, h / 2, w / 4, 0, 2 * Math.PI);
+		c.stroke();
+		c.restore();
+
+		c.beginPath();
+		// c.strokeStyle = "#ffffff";
+		// c.lineWidth = 2;
+		c.arc(w / 2, h / 2, w / 6, 0, 2 * Math.PI);
+		c.stroke();
+
+		// console.log("-- draw");
+	}
+
+	// https://www.w3schools.com/jsref/dom_obj_event.asp
+	// TODO: Why can't we call "canvas.addEventListener"?
+	window.addEventListener("resize", canvasResize);
+
+	canvasResize();
+</script>
+
+<script>
+	// https://stackoverflow.com/questions/15036386/make-image-drawn-on-canvas-draggable-with-javascript
+	$(function(){
+		// Import the constant variables "offsetX" and "offsetY" when the page loads.
+		// TODO: This should be recalculated if the "_canvas" is repositioned.
+		const {left: offsetX, top: offsetY} = $("#_canvas").offset();
+
+		// The variables "xx" and "yy" are the PREVIOUS x/y values from a prior "onmousemove" event.
+		var xx = 0;
+		var yy = 0;
+
+		// Boolean flag for setting the "okay-to-drag" state.
+		var drag = false;
+
+		$("#_canvas").mousedown((e) => { drag = true; });
+		$("#_canvas").mouseup((e) => { drag = false; });
+		$("#_canvas").mouseout((e) => { drag = false; });
+		$("#_canvas").mousemove((e) => {
+			var x = parseInt(e.clientX - offsetX);
+			var y = parseInt(e.clientY - offsetY);
+
+			if(drag) {
+				// Scroll X and Y values (sx/sy) are positive/negative differences between the
+				// CURRENT X/Y value and the PREVIOUS.
+				var sx = 0;
+				var sy = 0;
+
+				if(x > xx) sx = x - xx;
+
+				else if(x < xx) sx = -(xx - x);
+
+				if(y > yy) sy = y - yy;
+
+				else if(y < yy) sy = -(yy - y);
+
+				// TODO: Rather than invert here, would it make more sense to do the inversion
+				// in the lines of code above?
+				document.getElementById("_canvasDiv").scrollBy(-sx, -sy);
+			}
+
+			// Whether we're "dragging" or not, set the CURRENT X/Y as the PREVIOUS.
+			xx = x;
+			yy = y;
+		});
+	});
+</script>
+
+</body>
+</html>

@@ -2,7 +2,8 @@
 // vimrun! node -i -r ./csvchart-node
 
 const fs = require("fs");
-const Papa = require("./papaparse.js");
+const Papa = require("./lib/papaparse.min.js");
+// const Foo = require("./lib/foo.js");
 
 // const argv = process.argv.slice(2);
 
@@ -40,3 +41,6 @@ fs.readFile("testfiles/testfile-01.csv", "utf8", (err, data) => {
 
 	global.csv = [["FOO", "BAR", "BAZ"], ...csv]
 });
+
+global.Papa = Papa
+// global.Foo = Foo
