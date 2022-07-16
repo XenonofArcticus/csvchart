@@ -56,7 +56,13 @@ Feed CSV files into various chart/plot displays.
   - [Chart.js](https://www.chartjs.org)
   - [Chart.js/datalabels](https://github.com/chartjs/chartjs-plugin-datalabels)
 
+- **PDF**: [jsPDF](https://github.com/parallax/jsPDF)
+
 # TODO
+
+- [x] Mouse Drag Scrolling
+
+- [ ] Download PDF
 
 - [ ] CSV Data/Point Merging
 

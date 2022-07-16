@@ -2,25 +2,10 @@
 // vimrun! node -i -r ./csvchart-node
 
 const fs = require("fs");
-const Papa = require("./lib/papaparse.min.js");
-// const Foo = require("./lib/foo.js");
+const CSVChart = require("./lib/csvchart.js");
 
 // const argv = process.argv.slice(2);
-
 // var d = fs.readFileSync("test/testfile-01.csv", "utf8");
-
-/* fs.readFile("testfiles/testfile-00.csv", "utf8", (err, data) => {
-	if(err) {
-		console.error(err);
-
-		return;
-	}
-
-	global.csv = Papa.parse(data, {
-		dynamicTyping: true,
-		skipEmptyLines: true
-	}).data;
-}); */
 
 fs.readFile("testfiles/testfile-01.csv", "utf8", (err, data) => {
 	if(err) {
@@ -29,18 +14,9 @@ fs.readFile("testfiles/testfile-01.csv", "utf8", (err, data) => {
 		return;
 	}
 
-	var csv = Papa.parse(data, {
-		dynamicTyping: true,
-		skipEmptyLines: true,
-		header: true
-	}).data.map(e => [
-		e["Search Volume"],
-		e["Keyword Difficulty"],
-		e["Keyword"]
-	]);
+	var d = CSVChart.ChartJS.parse(data);
 
-	global.csv = [["FOO", "BAR", "BAZ"], ...csv]
+	console.log(d);
+
+	global.data = d;
 });
-
-global.Papa = Papa
-// global.Foo = Foo

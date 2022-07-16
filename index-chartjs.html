@@ -10,7 +10,6 @@
 	<script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
 	<script src="https://netdna.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.min.js"></script>
 	<script src="https://www.gstatic.com/charts/loader.js"></script>
-	<script src="papaparse.js"></script>
 	-->
 
 	<link href="lib/bootstrap-5.1.3.min.css" rel="stylesheet">
@@ -18,6 +17,7 @@
 	<script src="lib/jquery-1.11.0.min.js"></script>
 	<script src="lib/bootstrap-5.1.3.min.js"></script>
 	<script src="lib/papaparse.min.js"></script>
+	<script src="lib/csvchart.js"></script>
 
 	<script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.0/dist/chart.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
@@ -50,7 +50,7 @@
 			flex: 8;
 			overflow: auto;
 			background: rgb(230, 230, 230);
-			padding: 10px;
+			/* padding: 10px; */
 		}
 
 		footer {
@@ -69,33 +69,57 @@
 
 			const data = {
 				datasets: [{
-					label: "Scatter Dataset",
-					data: d, /*[
-						{ x: 1, y: 1 },
-						{ x: 3, y: 3 },
-						{ x: 6, y: 6 }
-					], */
+					label: "TODO!",
+					data: d,
 					backgroundColor: "rgb(255, 99, 132)"
 				}]
 			};
 
 			myChart = new Chart(ctx, {
 				type: "scatter",
-				// plugins: [ChartDataLabels],
-				data: data
-				/* options: { plugins: {
-					datalabels: {
-						// color: "red",
-						formatter: function(e) {
-							console.log("----------------- begin");
-							console.log(e);
-							console.log("----------------- end");
-
-							return e.z;
+				plugins: [ChartDataLabels],
+				data: data,
+				options: {
+					elements: {
+						point: {
+							radius: 6
+						},
+					},
+					animation: {
+						onComplete: updateFooter
+					},
+					plugins: {
+						// https://chartjs-plugin-datalabels.netlify.app/guide/options.html#scriptable-options
+						datalabels: {
+							align: "top",
+							// color: "rgb(240, 240, 240)",
+							color: "rgb(255, 99, 132)",
+							backgroundColor: "rgb(175, 175, 175)",
+							font: {
+								size: 10,
+								lineHeight: 1,
+							},
+							formatter: function(e) {
+								return e.label;
+							}
 						}
-					}
-				}} */
+					} /*,
+					scales: {
+						x: {
+							type: "logarithmic"
+						}
+					} */
+				}
 			});
+		}
+
+		function updateFooter() {
+			// myChart.canvas.parentNode.style.width + " x " +
+			// myChart.canvas.parentNode.style.height
+
+			var mcd = $("#myChartDiv");
+
+			$("#dimensions").text(parseInt(mcd.width()) + " x " + parseInt(mcd.height()));
 		}
 
 		$(function() {
@@ -103,7 +127,7 @@
 				var fr = new FileReader();
 
 				fr.onload = function() {
-					var csv = Papa.parse(fr.result, {
+					/* var csv = Papa.parse(fr.result, {
 						dynamicTyping: true,
 						skipEmptyLines: true,
 						header: true
@@ -113,7 +137,9 @@
 						"label": e["Keyword"]
 					}});
 
-					// console.log(csv, JSON.stringify(csv))
+					// console.log(csv, JSON.stringify(csv)); */
+
+					var csv = CSVChart.ChartJS.parse(fr.result);
 
 					drawChart(csv);
 				}
@@ -144,13 +170,15 @@
 						var w = myChart.canvas.width;
 						var h = myChart.canvas.height;
 
-						console.log("width = " + w);
-						console.log("height = " + h);
+						// console.log("width = " + w);
+						// console.log("height = " + h);
 
 						myChart.canvas.parentNode.style.width = "2000px";
 						myChart.canvas.parentNode.style.height = "1000px";
 
 						myChart.update();
+
+						updateFooter();
 					}
 				}
 			});
@@ -186,21 +214,82 @@
 			</div>
 		</div>
 	</header>
-	<chart>
-		<div style="overflow: auto;">
-			<canvas id="myChart" width="400" height="300"></canvas>
+	<chart id="foo">
+		<div id="myChartDiv" style="position: relative; height:40vh; width:80vw;">
+			<canvas id="myChart"></canvas>
 		</div>
+
+		<script>
+			// https://stackoverflow.com/questions/15036386/make-image-drawn-on-canvas-draggable-with-javascript
+			$(function() {
+				// Import the constant variables "offsetX" and "offsetY" when the page loads.
+				// TODO: This should be recalculated if the "myChart" is repositioned.
+				const {left: offsetX, top: offsetY} = $("#myChart").offset();
+
+				// The variables "xx" and "yy" are the PREVIOUS x/y values from a prior "onmousemove" event.
+				var xx = 0;
+				var yy = 0;
+
+				// Boolean flag for setting the "okay-to-drag" state.
+				var drag = false;
+
+				$("#myChart").mousedown((e) => { drag = true; });
+				$("#myChart").mouseup((e) => { drag = false; });
+				$("#myChart").mouseout((e) => { drag = false; });
+				$("#myChart").mousemove((e) => {
+					var x = parseInt(e.clientX - offsetX);
+					var y = parseInt(e.clientY - offsetY);
+
+					if(drag) {
+						// Scroll X and Y values (sx/sy) are positive/negative differences between the
+						// CURRENT X/Y value and the PREVIOUS.
+						var sx = 0;
+						var sy = 0;
+
+						if(x > xx) sx = x - xx;
+
+						else if(x < xx) sx = -(xx - x);
+
+						if(y > yy) sy = y - yy;
+
+						else if(y < yy) sy = -(yy - y);
+
+						// TODO: Rather than invert here, would it make more sense to do the inversion
+						// in the lines of code above?
+						// document.getElementById("myChartDiv").scrollBy(-sx, -sy);
+						document.getElementById("foo").scrollBy(-sx, -sy);
+
+						console.log(`x=${sx} y=${sy}`);
+					}
+
+					// Whether we're "dragging" or not, set the CURRENT X/Y as the PREVIOUS.
+					xx = x;
+					yy = y;
+				});
+			});
+		</script>
+
 	</chart>
 	<footer>
-		<div class="container" style="margin: 10px;">
+		<div class="container-fluid">
 			<div class="row">
 				<div class="col-lg-6 col-sm-6 col-12">
+					<div class="row-6">
 						<label for="scale">Chart Scale:</label>
 						<input type="text" id="scale" readonly style="border:0; color:#f6931f; font-weight:bold;">
+					</div>
+					<div id="dimensions" class="row-6">
+						...
+					</div>
 				</div>
 
 				<div class="col-lg-6 col-sm-6 col-12">
-					<div id="scale-slider"></div>
+					<div class="row-6">
+						<div id="scale-slider"></div>
+					</div>
+					<div class="row-6">
+						TODO
+					</div>
 				</div>
 			</div>
 		</div>
