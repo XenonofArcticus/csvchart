@@ -48,3 +48,5 @@ Feed CSV files into various chart/plot displays.
 - [ ] Visually Select Region To Re-draw (Using the mouse, the user should be
   able to drag-select a rectangular region of the current chart and re-draw it
   using only the selected data points.)
+
+- [ ] Detect "fullscreen" request (F11, usually) and hide header/footer.
