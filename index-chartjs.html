@@ -1,159 +1,217 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" media="screen,projection"> -->
-	<link rel="stylesheet" href="lib/materialize.min.css" media="screen,projection">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" media="screen,projection"> -->
+<link rel="stylesheet" href="lib/materialize.min.css" media="screen,projection">
 
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-	<!-- https://materializecss.com/color.html#palette -->
-	<style>
-		html, body {
-			margin: 0;
-			height: 100%;
-			min-height: 100%;
-		}
+<!-- https://materializecss.com/color.html#palette -->
+<style>
+	html, body {
+		margin: 0;
+		height: 100%;
+		min-height: 100%;
+	}
 
-		body {
-			margin: 0;
-			display: flex;
-			flex-direction: column;
-		}
+	body {
+		margin: 0;
+		display: flex;
+		flex-direction: column;
+	}
 
-		header {
-			flex: 1;
-			/* background: red; */
-			/* border-bottom: solid 1px grey; */
-			margin-bottom: 0px;
-		}
+	header {
+		flex: 1;
+		/* background: red; */
+		/* border-bottom: solid 1px grey; */
+		margin-bottom: 0px;
+	}
 
-		main {
-			flex: 8;
-			overflow-y: auto;
-			background: rgb(230, 230, 230);
-			padding: 5px;
-			margin: 0px;
-			border-top: solid 1px grey;
-			border-bottom: solid 1px grey;
-		}
+	main {
+		flex: 8;
+		overflow-y: auto;
+		background: rgb(230, 230, 230);
+		padding: 5px;
+		margin: 0px;
+		border-top: solid 1px grey;
+		border-bottom: solid 1px grey;
+	}
 
-		footer {
-			flex: 1;
-			/* background: gray; */
-			/* border-top: solid 1px grey; */
-			padding-top: 0px;
-		}
+	footer {
+		flex: 1;
+		/* background: gray; */
+		/* border-top: solid 1px grey; */
+		padding-top: 0px;
+	}
 
-		.btn {
-			background: rgb(60, 100, 240);
-		}
-	</style>
+	.btn {
+		background: rgb(60, 100, 240);
+	}
+</style>
 
-	<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.0/dist/chart.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
-	<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.0/dist/chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
 
-	<script src="lib/papaparse.min.js"></script>
-	<script src="lib/csvchart.js"></script>
-	<script>
-		var myChart = null;
+<script src="lib/papaparse.min.js"></script>
+<script src="lib/csvchart.js"></script>
+<script>
+	var myChart = null;
 
-		function drawChart(d) {
-			const ctx = document.getElementById("myChart").getContext("2d");
+/*
+scales: {
+      x: {
+        grid: {
+          display: DISPLAY,
+          drawBorder: BORDER,
+          drawOnChartArea: CHART_AREA,
+          drawTicks: TICKS,
+        }
+      },
+      y: {
+        grid: {
+          drawBorder: false,
+          color: function(context) {
+            if (context.tick.value > 0) {
+              return Utils.CHART_COLORS.green;
+            } else if (context.tick.value < 0) {
+              return Utils.CHART_COLORS.red;
+            }
 
-			const data = {
-				datasets: [{
-					label: "TODO!",
-					data: d,
-					backgroundColor: "rgb(255, 99, 132)"
-				}]
-			};
+            return '#000000';
+          },
+        },
+      }
+    }
+}
+*/
 
-			myChart = new Chart(ctx, {
-				type: "scatter",
-				plugins: [ChartDataLabels, ChartZoom],
-				data: data,
-				options: {
-					maintainAspectRatio: false,
-					elements: {
-						point: {
-							radius: 3
-						},
+	function drawChart(d) {
+		const ctx = document.getElementById("myChart").getContext("2d");
+		const half = Math.ceil(d.length / 2);
+
+		const data = {
+			datasets: [{
+				label: "Foo",
+				data: d.splice(0, half),
+				backgroundColor: "#9be"
+			}, {
+				label: "Bar",
+				data: d.splice(-half),
+				backgroundColor: "#b72"
+			}]
+		};
+
+		myChart = new Chart(ctx, {
+			type: "scatter",
+			plugins: [ChartDataLabels, ChartZoom],
+			data: data,
+			options: {
+				maintainAspectRatio: false,
+				elements: {
+					point: {
+						radius: 3
 					},
-					animation: {
-						onComplete: updateFooter
-					},
-					plugins: {
-						// https://www.chartjs.org/docs/latest/configuration/tooltip.html
-						tooltip: {
-							callbacks: {
-								label: (ctx) => {
-									return "Diff " + ctx.parsed.x + " Vol " + ctx.parsed.y;
-								}
-							}
-						},
-						// https://chartjs-plugin-datalabels.netlify.app/guide/options.html#scriptable-options
-						datalabels: {
-							align: "top",
-							// color: "rgb(240, 240, 240)",
-							// color: "rgb(255, 99, 132)",
-							// backgroundColor: "rgb(175, 175, 175)",
-							font: {
-								size: 11,
-								lineHeight: 1,
-							},
-							formatter: function(e) {
-								return e.label;
-							}
-						},
-						zoom: {
-							pan: {
-								enabled: true,
-								mode: "xy"
-							},
-							zoom: {
-								wheel: {
-									enabled: true
-								},
-								mode: "xy"
+				},
+				animation: {
+					onComplete: updateFooter
+				},
+				plugins: {
+					// https://www.chartjs.org/docs/latest/configuration/tooltip.html
+					tooltip: {
+						callbacks: {
+							label: (ctx) => {
+								return "Diff " + ctx.parsed.x + " Vol " + ctx.parsed.y;
 							}
 						}
 					},
-					scales: {
-						x: {
-							type: "logarithmic"
+					// https://chartjs-plugin-datalabels.netlify.app/guide/options.html#scriptable-options
+					datalabels: {
+						align: "top",
+						// color: "rgb(240, 240, 240)",
+						// color: "rgb(255, 99, 132)",
+						// backgroundColor: "rgb(175, 175, 175)",
+						font: {
+							size: 11,
+							lineHeight: 1,
+						},
+						formatter: function(e) {
+							return e.label;
+						}
+					},
+					zoom: {
+						pan: {
+							enabled: true,
+							mode: "xy"
+						},
+						zoom: {
+							wheel: {
+								enabled: true
+							},
+							mode: "xy"
+						}
+					}
+				},
+				// https://www.chartjs.org/docs/3.6.0/samples/scale-options/grid.html
+				scales: {
+					x: {
+						type: "logarithmic",
+						grid: {
+							// drawBorder: false,
+							color: (context) => {
+								if(context.tick.value == 10) return "#f00";
+
+								return "#bbb";
+							}
+						}
+						/* grid: {
+							display: DISPLAY,
+							drawBorder: BORDER,
+							drawOnChartArea: CHART_AREA,
+							drawTicks: TICKS,
+						} */
+					},
+					y: {
+						grid: {
+							// drawBorder: false,
+							color: (context) => {
+								if(context.tick.value == 0) return "#f00";
+
+								return "#bbb";
+							}
 						}
 					}
 				}
-			});
-		}
-
-		function updateFooter() {
-			// myChart.canvas.parentNode.style.width + " x " +
-			// myChart.canvas.parentNode.style.height
-
-			var mcd = $("#myChartDiv");
-
-			$("#dimensions").text(parseInt(mcd.width()) + " x " + parseInt(mcd.height()));
-		}
-
-		$(function() {
-			$(document).on("change", ":file", function() {
-				var fr = new FileReader();
-
-				fr.onload = function() {
-					var csv = CSVChart.ChartJS.parse(fr.result);
-
-					drawChart(csv);
-				}
-
-				fr.readAsText(this.files[0]);
-			});
+			}
 		});
-	</script>
+	}
+
+	function updateFooter() {
+		// myChart.canvas.parentNode.style.width + " x " +
+		// myChart.canvas.parentNode.style.height
+
+		var mcd = $("#myChartDiv");
+
+		$("#dimensions").text(parseInt(mcd.width()) + " x " + parseInt(mcd.height()));
+	}
+
+	$(function() {
+		$(document).on("change", ":file", function() {
+			var fr = new FileReader();
+
+			fr.onload = function() {
+				var csv = CSVChart.ChartJS.parse(fr.result);
+
+				drawChart(csv);
+			}
+
+			fr.readAsText(this.files[0]);
+		});
+	});
+</script>
 </head>
 <body>
 
