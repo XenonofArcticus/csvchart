@@ -166,7 +166,13 @@ scales: {
 
 								return "#bbb";
 							}
-						}
+						},
+						ticks: {
+							color: "#f00",
+							font: {
+								weight: "bold"
+							}
+						},
 						/* grid: {
 							display: DISPLAY,
 							drawBorder: BORDER,
@@ -175,6 +181,12 @@ scales: {
 						} */
 					},
 					y: {
+						ticks: {
+							color: "#f00",
+							font: {
+								weight: "bold"
+							}
+						},
 						grid: {
 							// drawBorder: false,
 							color: (context) => {

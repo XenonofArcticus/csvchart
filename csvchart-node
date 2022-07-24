@@ -2,21 +2,37 @@
 // vimrun! node -i -r ./csvchart-node
 
 const fs = require("fs");
+const argv = process.argv.slice(2);
+
 const CSVChart = require("./lib/csvchart.js");
 
-// const argv = process.argv.slice(2);
-// var d = fs.readFileSync("test/testfile-01.csv", "utf8");
+function readFile(path) {
+	return fs.readFileSync(path, "utf8");
 
-fs.readFile("testfiles/testfile-01.csv", "utf8", (err, data) => {
-	if(err) {
-		console.error(err);
+	/* fs.readFile(path, "utf8", (err, data) => {
+		if(err) {
+			console.error(err);
 
-		return;
-	}
+			return 1;
+		}
+	}); */
+}
 
-	var d = CSVChart.ChartJS.parse(data);
+function readChartJS(path) {
+	var d = CSVChart.ChartJS.parse(readFile(path));
 
-	console.log(d);
+	global.ChartJSData = d;
 
-	global.data = d;
-});
+	return d;
+}
+
+var d = readChartJS("testfiles/testfile-01.csv");
+var s = new Set(d.map(i => i.x));
+var ss = Array.from(s).sort((v0, v1) => { return v0 - v1; });
+var ssl = ss.map(i => Math.log(i));
+
+console.log(s);
+console.log(ss);
+console.log("Difference: " + (ss[ss.length -1] - ss[0]));
+console.log(ssl)
+console.log("Difference: " + (ssl[ssl.length -1] - ssl[0]));

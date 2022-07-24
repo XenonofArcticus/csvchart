@@ -23,7 +23,7 @@ Feed CSV files into various chart/plot displays.
 
 ## High Priority
 
-- [ ] CSV Data/Point Merging (Partial support, with caveats.)
+- [x] CSV Data/Point Merging
 
 - [ ] Excel-style Data Filtering (ChartJS supports this from the ground up, so
   it shouldn't be hard; not sure about Google Charts.)
@@ -39,7 +39,7 @@ Feed CSV files into various chart/plot displays.
   implicitly determine its own size; Google Charts accepts width/height
   arguments during the *draw* API call.)
 
-- [ ] Migrate To MaterializeCSS (This just trounces Bootstrap.)
+- [x] Migrate To MaterializeCSS (This just trounces Bootstrap.)
 
 - [ ] Header/Footer Element Minimization (The top/bottom elements should be able
   hide themselves after being used--and subsequently show themselves on
@@ -50,3 +50,6 @@ Feed CSV files into various chart/plot displays.
   using only the selected data points.)
 
 - [ ] Detect "fullscreen" request (F11, usually) and hide header/footer.
+
+- [ ] Understand [this](https://towardsdev.com/logarithmic-scale-how-to-plot-and-actually-understand-it-c38f00212206),
+  and determine how ChartJS chooses axis "ticks".
