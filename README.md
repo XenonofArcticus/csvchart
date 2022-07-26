@@ -28,6 +28,8 @@ Feed CSV files into various chart/plot displays.
 - [ ] Excel-style Data Filtering (ChartJS supports this from the ground up, so
   it shouldn't be hard; not sure about Google Charts.)
 
+- [ ] Convert all `<script>` sources to local copies.
+
 ## Low Priority
 
 - [x] Mouse Drag Scrolling (**DONE**)

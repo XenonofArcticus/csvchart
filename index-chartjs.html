@@ -50,44 +50,19 @@
 	}
 </style>
 
-<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<!-- TODO: Convert these to LOCAL copies! -->
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.4.0/jspdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.0/dist/chart.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
 
 <script src="lib/papaparse.min.js"></script>
+<!-- <script src="lib/canvas2svg.js"></script> -->
 <script src="lib/csvchart.js"></script>
 <script>
 	var myChart = null;
-
-/*
-scales: {
-      x: {
-        grid: {
-          display: DISPLAY,
-          drawBorder: BORDER,
-          drawOnChartArea: CHART_AREA,
-          drawTicks: TICKS,
-        }
-      },
-      y: {
-        grid: {
-          drawBorder: false,
-          color: function(context) {
-            if (context.tick.value > 0) {
-              return Utils.CHART_COLORS.green;
-            } else if (context.tick.value < 0) {
-              return Utils.CHART_COLORS.red;
-            }
-
-            return '#000000';
-          },
-        },
-      }
-    }
-}
-*/
 
 	function drawChart(d) {
 		const ctx = document.getElementById("myChart").getContext("2d");
@@ -110,6 +85,8 @@ scales: {
 			plugins: [ChartDataLabels, ChartZoom],
 			data: data,
 			options: {
+				// responsive: false,
+				// animations: false,
 				maintainAspectRatio: false,
 				elements: {
 					point: {
@@ -201,16 +178,52 @@ scales: {
 		});
 	}
 
-	function updateFooter() {
-		// myChart.canvas.parentNode.style.width + " x " +
-		// myChart.canvas.parentNode.style.height
+	/* function saveSVG() {
+		var svg = C2S(2000, 1000);
+		var svgChart = new Chart(svg, {
+			type: "scatter",
+			data: data,
+			options: {
+				responsive: false,
+				animations: false,
+			}
+		});
 
-		var mcd = $("#myChartDiv");
+		console.log(svg.getSerializedSvg(true));
+	} */
 
-		$("#dimensions").text(parseInt(mcd.width()) + " x " + parseInt(mcd.height()));
+	// TODO: This whole thing is sloppy...
+	function savePDF() {
+		var pdf = new jsPDF({
+			orientation: "landscape",
+			unit: "px",
+			format: "a4",
+			compress: true,
+		})
+
+		const canvas = document.querySelectorAll("canvas")[0];
+
+		// const pw = myChart.canvas.parentNode.style.width;
+		// const ph = myChart.canvas.parentNode.style.height;
+
+		const mcd = document.getElementById("myChartDiv");
+
+		const pw = mcd.clientWidth;
+		const ph = mcd.clientHeight;
+
+		console.log("Saving: ", pw, ph);
+
+		pdf.addImage(canvas, "PNG", 0, 0, pw, ph); // , "img0", "FAST");
+		pdf.save("csvchart.pdf");
 	}
 
-	$(function() {
+	function updateFooter() {
+		// var mcd = $("#myChartDiv");
+
+		// $("#dimensions").text(parseInt(mcd.width()) + " x " + parseInt(mcd.height()));
+	}
+
+	/* $(function() {
 		$(document).on("change", ":file", function() {
 			var fr = new FileReader();
 
@@ -222,7 +235,7 @@ scales: {
 
 			fr.readAsText(this.files[0]);
 		});
-	});
+	}); */
 </script>
 </head>
 <body>
@@ -234,8 +247,7 @@ scales: {
 				<div class="file-field input-field">
 					<div class="btn">
 						<span>Upload CSV</span>
-						<input type="file">
-						<!-- Select&hellip; <input type="file" style="display: none;" name="inputfile" id="inputfile"> -->
+						<input type="file" id="inputfile">
 					</div>
 					<div class="file-path-wrapper">
 						<input class="file-path validate" type="text">
@@ -262,7 +274,7 @@ scales: {
 			<div class="col s6">
 				<!-- Modal Trigger -->
 				<a class="waves-effect waves-light btn modal-trigger" href="#modal1">Options</a>
-				<a class="waves-effect waves-light btn"><i class="material-icons left">cloud</i>Download</a>
+				<a class="waves-effect waves-light btn" onclick="savePDF();"><i class="material-icons left">cloud</i>Download</a>
 
 				<!-- Modal Structure -->
 				<div id="modal1" class="modal bottom-sheet">
@@ -297,6 +309,18 @@ scales: {
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script> -->
 <script src="lib/materialize.min.js"></script>
 <script>
+	document.getElementById("inputfile").addEventListener("change", function() {
+		var fr = new FileReader();
+
+		fr.onload = function() {
+			var csv = CSVChart.ChartJS.parse(fr.result);
+
+			drawChart(csv);
+		}
+
+		fr.readAsText(this.files[0]);
+	});
+
 	document.addEventListener("DOMContentLoaded", () => {
 		var elems = document.querySelectorAll(".modal");
 		var instances = M.Modal.init(elems);
