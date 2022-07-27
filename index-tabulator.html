@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" media="screen,projection"> -->
+<link rel="stylesheet" href="lib/materialize.min.css" media="screen,projection">
+<link rel="stylesheet" href="lib/tabulator_materialize.css">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- https://materializecss.com/color.html#palette -->
+<style>
+	html, body {
+		margin: 0;
+		height: 100%;
+		min-height: 100%;
+	}
+
+	body {
+		margin: 0;
+		display: flex;
+		flex-direction: column;
+	}
+
+	header {
+		flex: 1;
+		/* background: red; */
+		/* border-bottom: solid 1px grey; */
+		margin-bottom: 0px;
+	}
+
+	main {
+		flex: 8;
+		overflow-y: auto;
+		background: rgb(230, 230, 230);
+		padding: 5px;
+		margin: 0px;
+		border-top: solid 1px grey;
+		border-bottom: solid 1px grey;
+	}
+
+	footer {
+		flex: 1;
+		/* background: gray; */
+		/* border-top: solid 1px grey; */
+		padding-top: 0px;
+	}
+
+	.btn {
+		background: rgb(60, 100, 240);
+	}
+</style>
+
+<!-- TODO: Convert these to LOCAL copies! -->
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.js"></script> -->
+
+<script src="lib/papaparse.min.js"></script>
+<script src="lib/csvchart.js"></script>
+<script>
+	// TODO!
+</script>
+</head>
+<body>
+
+<header>
+	<div class="container-fluid">
+		<div class="row valign-wrapper" style="margin-bottom: 0px;">
+			<form class="col s8" action="#">
+				<div class="file-field input-field">
+					<div class="btn">
+						<span>Upload CSV</span>
+						<input type="file" id="inputfile">
+					</div>
+					<div class="file-path-wrapper">
+						<input class="file-path validate" type="text">
+					</div>
+				</div>
+			</form>
+			<div class="col s4 right-align">
+				<img src="logo.png" width="125px" height="60px"/>
+			</div>
+		</div>
+	</div>
+</header>
+
+<main>
+	<div id="example-table" style="margin-bottom: 0px;"></div>
+</main>
+
+<footer class="page-footer white">
+	<div class="container-fluid">
+		<div class="row valign-wrapper" style="margin-bottom: 0px;">
+			<div class="col s6">
+				<!-- Modal Trigger -->
+				<a class="waves-effect waves-light btn modal-trigger" href="#modal1">Options</a>
+				<a class="waves-effect waves-light btn" onclick="savePDF();"><i class="material-icons left">cloud</i>Download</a>
+
+				<!-- Modal Structure -->
+				<div id="modal1" class="modal bottom-sheet">
+					<div class="modal-content">
+						<h4>Modal Header</h4>
+						<p>A bunch of text</p>
+					</div>
+
+					<form action="#">
+						<p class="range-field">
+						<input type="range" id="test5" min="0" max="100" />
+						</p>
+					</form>
+
+					<div class="modal-footer">
+						<a href="#!" class="modal-close waves-effect waves-light btn-flat">Done</a>
+					</div>
+				</div>
+			</div>
+
+			<div class="col s6" style="padding: 0px;">
+				<div class="footer-copyright white">
+					<div class="container grey-text text-darken-1">
+						©2022 AlphaPixel Reach <a class="grey-text text-darken-1 right" href="#!">More Links</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</footer>
+
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script> -->
+<script src="lib/materialize.min.js"></script>
+<script src="lib/tabulator.js"></script>
+<script>
+	document.getElementById("inputfile").addEventListener("change", function() {
+		var fr = new FileReader();
+
+		fr.onload = function() {
+			var tableData = CSVChart.Tabulator.parse(fr.result);
+			var table = new Tabulator("#example-table", {
+				data: tableData,
+				autoColumns: true,
+				initialSort: [
+				  { column: "Volume", dir: "desc" }
+				]
+			});
+		}
+
+		fr.readAsText(this.files[0]);
+	});
+
+	document.addEventListener("DOMContentLoaded", () => {
+		var elems = document.querySelectorAll(".modal");
+		var instances = M.Modal.init(elems);
+	});
+</script>
+</body>
+</html>

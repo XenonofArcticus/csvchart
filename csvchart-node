@@ -6,8 +6,11 @@ const argv = process.argv.slice(2);
 
 const CSVChart = require("./lib/csvchart.js");
 
-function readFile(path) {
-	return fs.readFileSync(path, "utf8");
+// Exports/returns the global variable "fileData".
+global.readFile = readFile = (path) => {
+	global.fileData = fs.readFileSync(path, "utf8");
+
+	return global.fileData;
 
 	/* fs.readFile(path, "utf8", (err, data) => {
 		if(err) {
@@ -18,15 +21,21 @@ function readFile(path) {
 	}); */
 }
 
-function readChartJS(path) {
-	var d = CSVChart.ChartJS.parse(readFile(path));
+// Exports/returns the global variable "csv".
+global.readCSV = readCSV = (path) => {
+	global.csv = CSVChart.parse(readFile(path));
 
-	global.ChartJSData = d;
-
-	return d;
+	return global.csv;
 }
 
-var d = readChartJS("testfiles/testfile-01.csv");
+// Exports/returns the global variable "ChartJSData".
+global.readChartJS = readChartJS = (path) => {
+	global.ChartJSData = CSVChart.ChartJS.parse(readFile(path));
+
+	return global.ChartJSData;
+}
+
+/* var d = readChartJS("testfiles/testfile-01.csv");
 var s = new Set(d.map(i => i.x));
 var ss = Array.from(s).sort((v0, v1) => { return v0 - v1; });
 var ssl = ss.map(i => Math.log(i));
@@ -35,4 +44,8 @@ console.log(s);
 console.log(ss);
 console.log("Difference: " + (ss[ss.length -1] - ss[0]));
 console.log(ssl)
-console.log("Difference: " + (ssl[ssl.length -1] - ssl[0]));
+console.log("Difference: " + (ssl[ssl.length -1] - ssl[0])); */
+
+var data = CSVChart.Tabulator.parse(readFile("testfiles/testfile-01.csv"));
+
+console.log(data);
