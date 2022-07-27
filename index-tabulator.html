@@ -3,7 +3,8 @@
 <head>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" media="screen,projection"> -->
-<link rel="stylesheet" href="lib/materialize.min.css" media="screen,projection">
+<link rel="stylesheet" href="lib/materialize.css" media="screen,projection">
+<!-- <link rel="stylesheet" href="lib/ghpages-materialize.css" media="screen,projection"> -->
 <link rel="stylesheet" href="lib/tabulator_materialize.css">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -49,6 +50,56 @@
 	.btn {
 		background: rgb(60, 100, 240);
 	}
+
+   /* label color */
+   .input-field label {
+     color: #000;
+   }
+
+   .input-field input[type=text] {}
+
+   /* label focus color */
+   .input-field input[type=text]:focus + label {
+     color: #000;
+   }
+
+   /* label underline focus color */
+   .input-field input[type=text]:focus {
+     border-bottom: 1px solid #ff0;
+     box-shadow: 0 1px 0 0 #ff0;
+   }
+
+   /* valid color */
+   .input-field input[type=text].valid {
+     border-bottom: 1px solid #000;
+     box-shadow: 0 1px 0 0 #000;
+   }
+
+   /* invalid color */
+   .input-field input[type=text].invalid {
+     border-bottom: 1px solid #000;
+     box-shadow: 0 1px 0 0 #000;
+   }
+
+   /* icon prefix focus color */
+   .input-field .prefix.active {
+     color: #ff0;
+   }
+
+	/* span.value {
+		margin: 0px;
+		padding: 0px;
+		background: rgb(60, 100, 240);
+	} */
+
+	input[type=range] + .thumb.active .value {
+		color: #fff;
+		margin: 0px;
+		/* padding: 0px; */
+		padding-top: 7px;
+		font-size: 10px;
+		font-weight: bold;
+	}
 </style>
 
 <!-- TODO: Convert these to LOCAL copies! -->
@@ -93,25 +144,140 @@
 			<div class="col s6">
 				<!-- Modal Trigger -->
 				<a class="waves-effect waves-light btn modal-trigger" href="#modal1">Options</a>
-				<a class="waves-effect waves-light btn" onclick="savePDF();"><i class="material-icons left">cloud</i>Download</a>
 
 				<!-- Modal Structure -->
+				<!--
 				<div id="modal1" class="modal bottom-sheet">
 					<div class="modal-content">
-						<h4>Modal Header</h4>
-						<p>A bunch of text</p>
+						<h4 class="header blue-text text-darken-4">Modal Header</h4>
+						<form action="#">
+							<p class="range-field">
+								<input type="range" id="test5" min="0" max="100" />
+							</p>
+						</form>
 					</div>
-
-					<form action="#">
-						<p class="range-field">
-						<input type="range" id="test5" min="0" max="100" />
-						</p>
-					</form>
 
 					<div class="modal-footer">
 						<a href="#!" class="modal-close waves-effect waves-light btn-flat">Done</a>
 					</div>
 				</div>
+				-->
+
+				<!-- Modal Structure -->
+				<div id="modal1" class="modal bottom-sheet">
+					<div class="modal-content">
+						<h4 class="header blue-text text-darken-4">Options</h4>
+						<ul class="collection">
+							<li class="collection-item">
+								<span class="title blue-text text-darken-2">Chart Scale</span>
+								<form action="#">
+									<p class="range-field">
+										<input type="range" id="test5" min="0" max="100" />
+									</p>
+								</form>
+							</li>
+							<li class="collection-item">
+								<span class="title blue-text text-darken-2">Exclude Fields (Comma-Separated)</span>
+								<form action="#" class="row">
+									<div class="input-field col s12">
+										<i class="material-icons prefix blue-text text-darken-2">block</i>
+										<input id="icon_prefix" type="text"> <!-- class="validate"> -->
+										<!-- <label for="icon_prefix">Comma-separated...</label> -->
+									</div>
+								</form>
+							</li>
+						</ul>
+					</div>
+					<div class="modal-footer">
+						<a href="#!" class="modal-close waves-effect waves-light btn-flat">Done</a>
+					</div>
+				</div>
+
+				<!-- Modal Structure -->
+				<!--
+				<div id="modal1" class="modal bottom-sheet">
+					<div class="modal-content">
+						<h4 class="header blue-text text-darken-4">Modal Header</h4>
+						<ul class="collection">
+							<li class="collection-item">
+								<span class="title">Title</span>
+								<form action="#">
+									<p class="range-field">
+										<input type="range" id="test5" min="0" max="100" />
+									</p>
+								</form>
+							</li>
+							<li class="collection-item">
+								<span class="title">Title</span>
+								<a href="#!" class="secondary-content">
+									<i class="material-icons">grade</i>
+								</a>
+							</li>
+							<li class="collection-item">
+								<span class="title">Title</span>
+								<a href="#!" class="secondary-content">
+									<i class="material-icons">grade</i>
+								</a>
+							</li>
+						</ul>
+					</div>
+
+					<div class="modal-footer">
+						<a href="#!" class="modal-close waves-effect waves-light btn-flat">Done</a>
+					</div>
+				</div>
+				-->
+
+				<!--
+				<div id="modal1" class="modal bottom-sheet">
+					<div class="modal-content">
+						<h3 class="header">Modal Header</h3>
+						<ul class="collection">
+							<li class="collection-item avatar">
+								<img src="images/yuna.jpg" alt="" class="circle">
+								<span class="title">Title</span>
+								<p>First Line
+									<br> Second Line
+								</p>
+								<a href="#!" class="secondary-content">
+									<i class="material-icons">grade</i>
+								</a>
+							</li>
+							<li class="collection-item avatar">
+								<i class="material-icons circle">folder</i>
+								<span class="title">Title</span>
+								<p>First Line
+									<br> Second Line
+								</p>
+								<a href="#!" class="secondary-content">
+									<i class="material-icons">grade</i>
+								</a>
+							</li>
+							<li class="collection-item avatar">
+								<i class="material-icons circle green">assessment</i>
+								<span class="title">Title</span>
+								<p>First Line
+									<br> Second Line
+								</p>
+								<a href="#!" class="secondary-content">
+									<i class="material-icons">grade</i>
+								</a>
+							</li>
+							<li class="collection-item avatar">
+								<i class="material-icons circle red">play_arrow</i>
+								<span class="title">Title</span>
+								<p>First Line
+									<br> Second Line
+								</p>
+								<a href="#!" class="secondary-content">
+									<i class="material-icons">grade</i>
+								</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+				-->
+
 			</div>
 
 			<div class="col s6" style="padding: 0px;">
@@ -126,7 +292,7 @@
 </footer>
 
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script> -->
-<script src="lib/materialize.min.js"></script>
+<script src="lib/materialize.js"></script>
 <script src="lib/tabulator.js"></script>
 <script>
 	document.getElementById("inputfile").addEventListener("change", function() {
@@ -148,7 +314,14 @@
 
 	document.addEventListener("DOMContentLoaded", () => {
 		var elems = document.querySelectorAll(".modal");
-		var instances = M.Modal.init(elems);
+		var instances = M.Modal.init(elems, {
+			onCloseEnd: () => {
+				console.log("CLOSED");
+			},
+			onOpenEnd: () => {
+				console.log("OPENED");
+			}
+		});
 	});
 </script>
 </body>
