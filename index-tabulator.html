@@ -1,115 +1,30 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" media="screen,projection"> -->
-<link rel="stylesheet" href="lib/materialize.min.css" media="screen,projection">
-<!-- <link rel="stylesheet" href="lib/ghpages-materialize.css" media="screen,projection"> -->
-<link rel="stylesheet" href="lib/tabulator_materialize.css">
 
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- https://materializecss.com/color.html#palette -->
-<style>
-	html, body {
-		margin: 0;
-		height: 100%;
-		min-height: 100%;
-	}
+<title>CSVChart</title>
 
-	body {
-		margin: 0;
-		display: flex;
-		flex-direction: column;
-	}
-
-	header {
-		flex: 1;
-		/* background: red; */
-		/* border-bottom: solid 1px grey; */
-		margin-bottom: 0px;
-	}
-
-	main {
-		flex: 8;
-		overflow-y: auto;
-		background: rgb(230, 230, 230);
-		padding: 5px;
-		margin: 0px;
-		border-top: solid 1px grey;
-		border-bottom: solid 1px grey;
-	}
-
-	footer {
-		flex: 1;
-		/* background: gray; */
-		/* border-top: solid 1px grey; */
-		padding-top: 0px;
-	}
-
-	.btn {
-		background: rgb(60, 100, 240);
-	}
-
-   /* label color */
-   .input-field label {
-     color: #000;
-   }
-
-   .input-field input[type=text] {}
-
-   /* label focus color */
-   .input-field input[type=text]:focus + label {
-     color: #000;
-   }
-
-   /* label underline focus color */
-   .input-field input[type=text]:focus {
-     border-bottom: 1px solid #ff0;
-     box-shadow: 0 1px 0 0 #ff0;
-   }
-
-   /* valid color */
-   .input-field input[type=text].valid {
-     border-bottom: 1px solid #000;
-     box-shadow: 0 1px 0 0 #000;
-   }
-
-   /* invalid color */
-   .input-field input[type=text].invalid {
-     border-bottom: 1px solid #000;
-     box-shadow: 0 1px 0 0 #000;
-   }
-
-   /* icon prefix focus color */
-   .input-field .prefix.active {
-     color: #ff0;
-   }
-
-	/* span.value {
-		margin: 0px;
-		padding: 0px;
-		background: rgb(60, 100, 240);
-	} */
-
-	input[type=range] + .thumb.active .value {
-		color: #fff;
-		margin: 0px;
-		/* padding: 0px; */
-		padding-top: 7px;
-		font-size: 10px;
-		font-weight: bold;
-	}
-</style>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" media="screen"> -->
+<link rel="stylesheet" href="lib/materialize.min.css" media="screen">
+<!-- <link rel="stylesheet" href="lib/ghpages-materialize.css" media="screen"> -->
+<link rel="stylesheet" href="lib/tabulator_materialize.css">
+<link rel="stylesheet" href="lib/csvchart.css">
 
 <!-- TODO: Convert these to LOCAL copies! -->
 <!-- <script src="https://code.jquery.com/jquery-3.6.0.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.4.0/jspdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.0/dist/chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
 
 <script src="lib/papaparse.min.js"></script>
+<!-- <script src="lib/canvas2svg.js"></script> -->
 <script src="lib/csvchart.js"></script>
-<script>
-	// TODO!
-</script>
 </head>
 <body>
 
@@ -128,14 +43,18 @@
 				</div>
 			</form>
 			<div class="col s4 right-align">
-				<img src="logo.png" width="125px" height="60px"/>
+				<img src="logo.png" width="125" height="60" alt="logo">
 			</div>
 		</div>
 	</div>
 </header>
 
 <main>
-	<div id="tabulator" style="margin-bottom: 0px;"></div>
+	<div id="chartDiv">
+		<canvas id="chart"></canvas>
+	</div>
+
+	<div id="tabulator"></div>
 </main>
 
 <footer class="page-footer white">
@@ -143,25 +62,9 @@
 		<div class="row valign-wrapper" style="margin-bottom: 0px;">
 			<div class="col s6">
 				<!-- Modal Trigger -->
-				<a class="waves-effect waves-light btn modal-trigger" href="#modal1">Options</a>
-
-				<!-- Modal Structure -->
-				<!--
-				<div id="modal1" class="modal bottom-sheet">
-					<div class="modal-content">
-						<h4 class="header blue-text text-darken-4">Modal Header</h4>
-						<form action="#">
-							<p class="range-field">
-								<input type="range" id="test5" min="0" max="100" />
-							</p>
-						</form>
-					</div>
-
-					<div class="modal-footer">
-						<a href="#!" class="modal-close waves-effect waves-light btn-flat">Done</a>
-					</div>
-				</div>
-				-->
+				<a class="waves-effect waves-light btn modal-trigger" href="#modal1" id="options">Options</a>
+				<!-- TODO: Disable when viewing Tabultor! -->
+				<a class="waves-effect waves-light btn" onclick="savePDF();" id="download"><i class="material-icons left">cloud</i>Download</a>
 
 				<!-- Modal Structure -->
 				<div id="modal1" class="modal bottom-sheet">
@@ -192,98 +95,23 @@
 						<a href="#!" class="modal-close waves-effect waves-light btn-flat">Done</a>
 					</div>
 				</div>
-
-				<!-- Modal Structure -->
-				<!--
-				<div id="modal1" class="modal bottom-sheet">
-					<div class="modal-content">
-						<h4 class="header blue-text text-darken-4">Modal Header</h4>
-						<ul class="collection">
-							<li class="collection-item">
-								<span class="title">Title</span>
-								<form action="#">
-									<p class="range-field">
-										<input type="range" id="test5" min="0" max="100" />
-									</p>
-								</form>
-							</li>
-							<li class="collection-item">
-								<span class="title">Title</span>
-								<a href="#!" class="secondary-content">
-									<i class="material-icons">grade</i>
-								</a>
-							</li>
-							<li class="collection-item">
-								<span class="title">Title</span>
-								<a href="#!" class="secondary-content">
-									<i class="material-icons">grade</i>
-								</a>
-							</li>
-						</ul>
-					</div>
-
-					<div class="modal-footer">
-						<a href="#!" class="modal-close waves-effect waves-light btn-flat">Done</a>
-					</div>
-				</div>
-				-->
-
-				<!--
-				<div id="modal1" class="modal bottom-sheet">
-					<div class="modal-content">
-						<h3 class="header">Modal Header</h3>
-						<ul class="collection">
-							<li class="collection-item avatar">
-								<img src="images/yuna.jpg" alt="" class="circle">
-								<span class="title">Title</span>
-								<p>First Line
-									<br> Second Line
-								</p>
-								<a href="#!" class="secondary-content">
-									<i class="material-icons">grade</i>
-								</a>
-							</li>
-							<li class="collection-item avatar">
-								<i class="material-icons circle">folder</i>
-								<span class="title">Title</span>
-								<p>First Line
-									<br> Second Line
-								</p>
-								<a href="#!" class="secondary-content">
-									<i class="material-icons">grade</i>
-								</a>
-							</li>
-							<li class="collection-item avatar">
-								<i class="material-icons circle green">assessment</i>
-								<span class="title">Title</span>
-								<p>First Line
-									<br> Second Line
-								</p>
-								<a href="#!" class="secondary-content">
-									<i class="material-icons">grade</i>
-								</a>
-							</li>
-							<li class="collection-item avatar">
-								<i class="material-icons circle red">play_arrow</i>
-								<span class="title">Title</span>
-								<p>First Line
-									<br> Second Line
-								</p>
-								<a href="#!" class="secondary-content">
-									<i class="material-icons">grade</i>
-								</a>
-							</li>
-						</ul>
-					</div>
-				</div>
-				-->
-
 			</div>
 
 			<div class="col s6" style="padding: 0px;">
 				<div class="footer-copyright white">
 					<div class="container grey-text text-darken-1">
-						©2022 AlphaPixel Reach <a class="grey-text text-darken-1 right" href="#!">More Links</a>
+						©2022 AlphaPixel Reach
+
+						<!-- https://materializecss.com/floating-action-button.html -->
+						<div class="fixed-action-btn">
+							<a class="btn-floating btn-large">
+								<i class="large material-icons">mode_edit</i>
+							</a>
+							<ul>
+								<li><a class="btn-floating green lighten-2" onclick="showChart();"><i class="material-icons">bubble_chart</i></a></li>
+								<li><a class="btn-floating green lighten-2" onclick="showTable();"><i class="material-icons">grid_on</i></a></li>
+							</ul>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -295,7 +123,73 @@
 <script src="lib/materialize.min.js"></script>
 <script src="lib/tabulator.js"></script>
 <script>
-	var tabulator = null;
+	var CHART = null;
+	var TABULATOR = null;
+
+	function getRowCell(i, c="Visible") {
+		return TABULATOR.getRows()[i].getCell(c);
+		// .getElement().children[0].children[0];
+	}
+
+	/* function saveSVG() {
+		var svg = C2S(2000, 1000);
+		var svgChart = new Chart(svg, {
+			type: "scatter",
+			data: data,
+			options: {
+				responsive: false,
+				animations: false,
+			}
+		});
+
+		console.log(svg.getSerializedSvg(true));
+	} */
+
+	// TODO: https://www.chartjs.org/docs/latest/developers/updates.html
+	function showChart() {
+		document.getElementById("chartDiv").style.display = "block";
+		document.getElementById("tabulator").style.display = "none";
+		document.getElementById("options").classList.add("disabled")
+		document.getElementById("download").classList.remove("disabled")
+	}
+
+	function showTable() {
+		document.getElementById("chartDiv").style.display = "none";
+		document.getElementById("tabulator").style.display = "block";
+		document.getElementById("options").classList.remove("disabled")
+		document.getElementById("download").classList.add("disabled")
+	}
+
+	// TODO: This whole thing is sloppy...
+	function savePDF() {
+		var pdf = new jsPDF("landscape"); /*{
+			orientation: "landscape",
+			unit: "px",
+			format: "a4",
+			compress: true,
+		}); */
+
+		const canvas = document.querySelectorAll("canvas")[0];
+
+		// const pw = CHART.canvas.parentNode.style.width;
+		// const ph = CHART.canvas.parentNode.style.height;
+
+		const cd = document.getElementById("chartDiv");
+
+		const pw = 280; // cd.clientWidth;
+		const ph = 130; // cd.clientHeight;
+
+		console.log("Saving: ", pw, ph);
+
+		pdf.addImage(canvas, "PNG", 0, 0, pw, ph); // , "img0", "FAST");
+		pdf.save("csvchart.pdf");
+	}
+
+	function updateFooter() {
+		// var cd = $("#chartDiv");
+
+		// $("#dimensions").text(parseInt(cd.width()) + " x " + parseInt(cd.height()));
+	}
 
 	function customFilter(data, params) {
 		// const p = params.split(",").map(e => e.trim().toLowerCase());
@@ -313,20 +207,15 @@
 		return true;
 	}
 
-	document.getElementById("inputfile").addEventListener("change", function() {
+	document.getElementById("inputfile").addEventListener("change", () => {
 		var fr = new FileReader();
 
-		fr.onload = function() {
-			tabulator = new Tabulator("#tabulator", {
-				data: CSVChart.Tabulator.parse(fr.result),
-				autoColumns: true,
-				initialSort: [{
-					column: "Volume",
-					dir: "desc"
-				}]
-			});
+		fr.onload = () => {
+			// TODO: PUT REAL ChartJS.create() HERE!
+			// CSVChart.ChartJS.draw(CSVChart.ChartJS.parse(fr.result));
 
-			// tabulator.on("tableBuilt", () => { tabulator.setFilter(customFilter); });
+			// TODO: PUT REAL Tabulator.create() HERE!
+			// TABULATOR.on("tableBuilt", () => { TABULATOR.setFilter(customFilter); });
 		}
 
 		fr.readAsText(this.files[0]);
@@ -341,12 +230,24 @@
 
 				console.log("Excluding: ", excludes);
 
-				if(tabulator) tabulator.setFilter(customFilter, excludes);
+				if(TABULATOR) TABULATOR.setFilter(customFilter, excludes);
 			}
 			/* onOpenEnd: () => {
 				console.log("OPENED");
 			} */
 		});
+
+		// var elems = document.querySelectorAll('.fixed-action-btn');
+		// var instances = M.FloatingActionButton.init(elems, options);
+		M.FloatingActionButton.init(document.querySelectorAll(".fixed-action-btn"), {
+			direction: "left",
+			hoverEnabled: false
+		});
+
+		CHART = CSVChart.ChartJS.create("chart", CSVChart.ChartJS.parse(CSVChart.testCSV));
+		TABULATOR = CSVChart.Tabulator.create("#tabulator", CSVChart.Tabulator.parse(CSVChart.testCSV));
+
+		showChart();
 	});
 </script>
 </body>

@@ -46,6 +46,7 @@ console.log("Difference: " + (ss[ss.length -1] - ss[0]));
 console.log(ssl)
 console.log("Difference: " + (ssl[ssl.length -1] - ssl[0])); */
 
-var data = CSVChart.Tabulator.parse(readFile("testfiles/testfile-01.csv"));
+// var data = CSVChart.Tabulator.parse(readFile("testfiles/testfile-01.csv"));
+var data = CSVChart.ChartJS.parse(readFile("testfiles/testfile-01.csv"));
 
 console.log(data);
