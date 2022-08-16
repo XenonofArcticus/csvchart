@@ -28,18 +28,24 @@ Feed CSV files into various chart/plot displays.
 
 ## High Priority
 
-- [x] CSV Data/Point Merging (This only currently works for EXACT matches).
-
 - [ ] Excel-style Data Filtering (ChartJS supports this from the ground up, so
   it shouldn't be hard; not sure about Google Charts).
 
 - [ ] Convert all `<script>` sources to local copies.
 
-- [ ] Add "Total Rows" display for Tabulator.
-
 - [ ] Support loading multiple CSV files.
 
 - [ ] Constrain ZOOM and PAN options to something sensible.
+
+- [ ] Download PDF/SVG (jsPDF currently just "rasters" the Canvas as a static
+  PNG embedded inside the file; this is **NOT** what we want).
+
+- [ ] Header/Footer Element Minimization (The top/bottom elements should be able
+  hide themselves after being used--and subsequently show themselves on
+  mouseover--freeing up visualization space for the chart itself).
+
+- [ ] Detect "fullscreen" request (F11, usually) and hide header/footer.
+
 
 ## Low Priority
 
@@ -52,26 +58,22 @@ Feed CSV files into various chart/plot displays.
 
 - [x] Mouse Drag Scrolling.
 
-- [ ] Download PDF/SVG (jsPDF currently just "rasters" the Canvas as a static
-  PNG embedded inside the file; this is **NOT** what we want).
-
 - [ ] Interactive Static Sizing (ChartJS relies on the **PARENT DIV SIZE** to
   implicitly determine its own size; Google Charts accepts width/height
   arguments during the *draw* API call).
 
 - [x] Migrate To MaterializeCSS (This just trounces Bootstrap).
 
-- [ ] Header/Footer Element Minimization (The top/bottom elements should be able
-  hide themselves after being used--and subsequently show themselves on
-  mouseover--freeing up visualization space for the chart itself).
-
 - [ ] Investigate embedding small Tabulator instances inside ChartJS tooltips.
+
+- [ ] Understand [this](https://towardsdev.com/logarithmic-scale-how-to-plot-and-actually-understand-it-c38f00212206),
+  and determine how ChartJS chooses axis "ticks".
+
+- [x] CSV Data/Point Merging (This only currently works for EXACT matches).
+
+- [ ] Add "Total Rows" display for Tabulator.
 
 - [ ] Visually Select Region To Re-draw (Using the mouse, the user should be
   able to drag-select a rectangular region of the current chart and re-draw it
   using only the selected data points).
 
-- [ ] Detect "fullscreen" request (F11, usually) and hide header/footer.
-
-- [ ] Understand [this](https://towardsdev.com/logarithmic-scale-how-to-plot-and-actually-understand-it-c38f00212206),
-  and determine how ChartJS chooses axis "ticks".
