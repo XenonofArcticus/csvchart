@@ -26,30 +26,6 @@ Feed CSV files into various chart/plot displays.
 
 # TODO
 
-We want to find all of the things customers might search for if they HAVEN'T
-decided who/what to buy.
-
-So, we want to throw out any terms like "creality blah blah" or "prusa blah
-blah" and focus just on searches like "best 3d printer for making warhammer 40k
-figures" or "how do I 3d print dungeon tiles" or "3d printing model rocket
-parts" and then write web pages for OUR customer that feature THAT content to
-get undecided people on their site and convince them to buy from them
-
-We usually go through each CSV in Excel and manually examine and delete at
-least half of the records as not being generic or useful, and then plot the
-rest this way to judge which ones are the best opportunity.
-
-So if you feel like the chart is adequately done (where does PDF export stand?)
-then we could move on to the spreadsheet view where we want to be able to query
-records to identify things like company or product names and hide those junk
-records from the chart. So, I'd like to have a UI where I can list unwanted
-words like "prusa", "prusa3d", "creality", "ender" "halot", and have it disable
-any records with any of those strings. And then also have a way to individually
-manually disable records (checkbox at the start of the record's row?) that the
-human decides are not wanted, like "circus denver 2016". That's not a useful
-query, but we don't want to exclude it by globally excluding "circus", "denver"
-or "2016"
-
 ## High Priority
 
 - [x] CSV Data/Point Merging (This only currently works for EXACT matches).
@@ -62,6 +38,8 @@ or "2016"
 - [ ] Add "Total Rows" display for Tabulator.
 
 - [ ] Support loading multiple CSV files.
+
+- [ ] Constrain ZOOM and PAN options to something sensible.
 
 ## Low Priority
 
